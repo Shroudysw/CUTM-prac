@@ -1,17 +1,36 @@
-const form = document.getElementById("chat-form");
-const input = document.getElementById("chat-input");
-const chatBox = document.getElementById("chat-box");
+function sendMessage() {
+  const input = document.getElementById("user-input");
+  const message = input.value.trim();
 
-form.addEventListener("submit", function (e) {
-  e.preventDefault();
+  if (message === "") return;
 
-  const mesaj = input.value.trim();
-  if (mesaj !== "") {
-    const div = document.createElement("div");
-    div.classList.add("chat-message");
-    div.textContent = mesaj;
-    chatBox.appendChild(div);
-    chatBox.scrollTop = chatBox.scrollHeight; 
-    input.value = "";
-  }
-});
+  addMessageToChat(message, "user");
+  input.value = "";
+
+  setTimeout(() => {
+    const botReply = getBotResponse(message);
+    addMessageToChat(botReply, "bot");
+  }, 500);
+}
+
+function addMessageToChat(message, sender) {
+  const chatBox = document.getElementById("chat-box");
+  const messageElem = document.createElement("div");
+
+  messageElem.classList.add("message", sender);
+  messageElem.textContent = message;
+
+  chatBox.appendChild(messageElem);
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function getBotResponse(input) {
+  input = input.toLowerCase();
+
+  if (input.includes("salut")) return "Salut! Cum pot ajuta?";
+  if (input.includes("ce faci")) return "Încerc să fiu util 😄";
+  if (input.includes("cine ești")) return "Sunt un mini-bot creat de tine!";
+  if (input.includes("la revedere")) return "Ne mai vedem! 👋";
+
+  return "Hmm... nu știu ce să răspund la asta 🤖";
+}
